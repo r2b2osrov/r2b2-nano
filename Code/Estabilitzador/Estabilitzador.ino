@@ -31,9 +31,9 @@ const int motorD_B = 19;
 const int motorE_F = 26;
 const int motorE_B = 17;
 const int motorP_F = 5;
-const int motorP_B = 18;
+const int motorF_B = 18;
 const int motorF_F = 25;
-const int motorF_B = 16;
+const int motorP_B = 16;
 
 int joystick_X = 512;
 int joystick_Y = 512;
@@ -51,39 +51,76 @@ BLYNK_WRITE(V1) {
   // Do something with x and y
 
   if (estabilitzador){
-    if (y>512) {
+    if (y>712) {
       manual = true;
-      ledcWrite(ledChannelD_F, 255);
-      ledcWrite(ledChannelE_F, 255);
-      ledcWrite(ledChannelD_B, 0);
-      ledcWrite(ledChannelE_B, 0);
-    } else if (y<512) {
+      if (x>712){
+        ledcWrite(ledChannelD_F, 0);
+        ledcWrite(ledChannelE_F, 255);
+        ledcWrite(ledChannelD_B, 255);
+        ledcWrite(ledChannelE_B, 0);
+      } else if (x<312) {
+        ledcWrite(ledChannelD_F, 255);
+        ledcWrite(ledChannelE_F, 0);
+        ledcWrite(ledChannelD_B, 0);
+        ledcWrite(ledChannelE_B, 255);
+      } else {      
+        ledcWrite(ledChannelD_F, 255);
+        ledcWrite(ledChannelE_F, 255);
+        ledcWrite(ledChannelD_B, 0);
+        ledcWrite(ledChannelE_B, 0);
+      }
+    } else if (y<312) {
       manual = true;
-      ledcWrite(ledChannelD_F, 0);
-      ledcWrite(ledChannelE_F, 0);
-      ledcWrite(ledChannelD_B, 255);
-      ledcWrite(ledChannelE_B, 255);
+      if (x>712){
+        ledcWrite(ledChannelD_F, 255);
+        ledcWrite(ledChannelE_F, 0);
+        ledcWrite(ledChannelD_B, 0);
+        ledcWrite(ledChannelE_B, 255);
+      } else if (x<312){
+        ledcWrite(ledChannelD_F, 0);
+        ledcWrite(ledChannelE_F, 255);
+        ledcWrite(ledChannelD_B, 255);
+        ledcWrite(ledChannelE_B, 0);
+      } else {
+        ledcWrite(ledChannelD_F, 0);
+        ledcWrite(ledChannelE_F, 0);
+        ledcWrite(ledChannelD_B, 255);
+        ledcWrite(ledChannelE_B, 255);
+      }
+      
     } else {
-      manual = false;
-      ledcWrite(ledChannelD_F, 0);
-      ledcWrite(ledChannelE_F, 0);
-      ledcWrite(ledChannelD_B, 0);
-      ledcWrite(ledChannelE_B, 0);
+       if (x>712){
+        ledcWrite(ledChannelD_F, 0);
+        ledcWrite(ledChannelE_F, 255);
+        ledcWrite(ledChannelD_B, 255);
+        ledcWrite(ledChannelE_B, 0);
+      } else if (x<312) {
+        ledcWrite(ledChannelD_F, 255);
+        ledcWrite(ledChannelE_F, 0);
+        ledcWrite(ledChannelD_B, 0);
+        ledcWrite(ledChannelE_B, 255);
+      } else {
+        manual = false;
+        ledcWrite(ledChannelD_F, 0);
+        ledcWrite(ledChannelE_F, 0);
+        ledcWrite(ledChannelD_B, 0);
+        ledcWrite(ledChannelE_B, 0);
+      }
     }
   }
   else {
-    if (y>512) {
+    if (y>712) {
       manual = true;
       ledcWrite(ledChannelF_F, 255);
       ledcWrite(ledChannelP_F, 0);
       ledcWrite(ledChannelF_B, 0);
-      ledcWrite(ledChannelP_B, 0);
-    } else if (y<512) {
+      ledcWrite(ledChannelP_B, 255);
+    } else if (y<312) {
       manual = true;
       ledcWrite(ledChannelF_F, 0);
-      ledcWrite(ledChannelP_F, 0);
-      ledcWrite(ledChannelF_B, 0);
-      ledcWrite(ledChannelP_B, 255);
+      ledcWrite(ledChannelP_F, 255);
+      ledcWrite(ledChannelF_B, 255);
+      ledcWrite(ledChannelP_B, 0);
     } else {
       manual = false;
       ledcWrite(ledChannelF_F, 0);
@@ -92,15 +129,6 @@ BLYNK_WRITE(V1) {
       ledcWrite(ledChannelP_B, 0);
     }  
   }
-
-  if (debug) {
-    terminal.print("X = ");
-    terminal.print(x);
-    terminal.print("; Y = ");
-    terminal.println(y);
-    terminal.flush(); 
-  }
-
 }
 
 BLYNK_WRITE(V3) {
@@ -127,10 +155,10 @@ BLYNK_WRITE(V2) {
     //UP
     if (param.asInt()) {
       manual = true;
-      ledcWrite(ledChannelP_F, 255);
-      ledcWrite(ledChannelF_F, 255);
-      ledcWrite(ledChannelP_B, 0);
-      ledcWrite(ledChannelF_B, 0);
+      ledcWrite(ledChannelP_F, 0);
+      ledcWrite(ledChannelF_F, 0);
+      ledcWrite(ledChannelP_B, 255);
+      ledcWrite(ledChannelF_B, 255);
     } else {
       manual = false;
       ledcWrite(ledChannelP_F, 0);
@@ -161,10 +189,10 @@ BLYNK_WRITE(V4) {
     //DOWN!
     if (param.asInt()) {
       manual = true;
-      ledcWrite(ledChannelP_B, 255);
-      ledcWrite(ledChannelF_B, 255);
-      ledcWrite(ledChannelP_F, 0);
-      ledcWrite(ledChannelF_F, 0);
+      ledcWrite(ledChannelP_B, 0);
+      ledcWrite(ledChannelF_B, 0);
+      ledcWrite(ledChannelP_F, 255);
+      ledcWrite(ledChannelF_F, 255);
     } else {
       manual = false;
       ledcWrite(ledChannelP_B, 0);
@@ -178,14 +206,14 @@ BLYNK_WRITE(V4) {
       manual = true;
       ledcWrite(ledChannelD_B, 255);
       ledcWrite(ledChannelE_B, 255);
-      ledcWrite(ledChannelP_F, 0);
-      ledcWrite(ledChannelF_F, 0);
+      ledcWrite(ledChannelD_F, 0);
+      ledcWrite(ledChannelE_F, 0);
     } else {
       manual = false;
       ledcWrite(ledChannelD_B, 0);
       ledcWrite(ledChannelE_B, 0);
-      ledcWrite(ledChannelP_F, 0);
-      ledcWrite(ledChannelF_F, 0);
+      ledcWrite(ledChannelD_F, 0);
+      ledcWrite(ledChannelE_F, 0);
     }
   }
 }
@@ -257,14 +285,6 @@ void loop(){
   GyY=Wire.read()<<8|Wire.read(); // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
   GyZ=Wire.read()<<8|Wire.read(); // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
 
-//  Serial.print("AcX = "); Serial.print(AcX);
-//  Serial.print(" | AcY = "); Serial.print(AcY);
-//  Serial.print(" | AcZ = "); Serial.print(AcZ);
-//  Serial.print(" | Tmp = "); Serial.print(Tmp/340.00+36.53); //equation for temperature in degrees C from datasheet
-//  Serial.print(" | GyX = "); Serial.print(GyX);
-//  Serial.print(" | GyY = "); Serial.print(GyY);
-//  Serial.print(" | GyZ = "); Serial.println(GyZ);
-
   if (estabilitzador & !manual) {   
     if (GyY<0) {
       ledcWrite(ledChannelP_F, 255);
@@ -276,22 +296,9 @@ void loop(){
       ledcWrite(ledChannelP_F, 0);
       if (debug) { terminal.print(" M_FRON_F = "); terminal.println(((GyY*255)/16000)); }
     }
-    
-    //terminal.flush(); 
   }
 
-  if (!estabilitzador & !manual) {
-    ledcWrite(ledChannelP_F, 0);
-    ledcWrite(ledChannelF_F, 0);
-    ledcWrite(ledChannelE_F, 0); 
-    ledcWrite(ledChannelD_F, 0);
-    ledcWrite(ledChannelP_B, 0);
-    ledcWrite(ledChannelF_B, 0);
-    ledcWrite(ledChannelE_B, 0); 
-    ledcWrite(ledChannelD_B, 0);
-  }
-
-  delay(200);
+  delay(100);
 }
 
 
