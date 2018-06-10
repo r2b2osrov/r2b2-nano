@@ -1,16 +1,24 @@
 /*
-Default values for module half_thruster_A
+Title:          halt_thruster_A.scad for generate STL file
+Description:    Thruster desing
+Authors:        Pau Roura (@proura)
+Date:           20180610
+Version:        0.1
+Notes:
 
-module half_thruster_A(
-    w_walls=2.7,    //width of the walls
-    d_motor=7.6,    //motor diametre
-    h_motor=8,      //motor support height
-    o_motor=0,      //motor support distance from ground
-    d_thruster=34,  //thruster diameter
-    h_thruster=30,  //thruster height
-    d_screw=3.4,    //screw diameter
-    h_support=8,    //screw support height
-    w_support=8)    //screw support width
+    Default values for module half_thruster_A
+
+    module half_thruster_A(
+        w_walls=2.7,    //width of the walls
+        d_motor=7.6,    //motor diameter
+        h_motor_sup=8,      //motor support height
+        o_motor=0,      //motor support distance from ground
+        d_thruster=34,  //thruster diameter
+        h_thruster=30,  //thruster height
+        d_screw=3.4,    //screw diameter
+        h_support=8,    //screw support height
+        w_support=8     //screw support width
+    )
 */
 
 use <../thruster.scad>;

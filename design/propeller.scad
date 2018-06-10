@@ -1,12 +1,24 @@
 /*
-w_walls = 2.7;
-d_thruster = 34;
-h_propeller = 10;
-o_propeller = 1;
-n_blade = 3;
-s_blade = 20;
-w_blade = 4;
-d_motor = 1;
+Title:          propeller.scad
+Description:    encapsulation for the motors
+Authors:        Pau Roura (@proura)
+Date:           20180610
+Version:        0.1
+Notes:
+
+    Default values for module propeller
+
+    module propeller(
+        w_walls=2.7,        //with of the walls
+        d_thruster=34,      //thruster diameter
+        h_propeller=10,     //propeller height
+        o_propeller=1,      //distance from propeller to walls of thruster
+        n_blade=3,          //number of blades
+        s_blade=20,         //angle separation between blades
+        w_blade=4,          //with of the blades
+        rounded=false,      //shape of the blades [round | trian | empty]
+        d_motor_shaft=1     //motor shaft diameter
+    )
 */
 
 module blades(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4){
@@ -17,7 +29,7 @@ module blades(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade
     }
 }
 
-module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4, rounded=false, d_motor=1){
+module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4, rounded=false, d_motor_shaft=1){
     difference(){ 
         union(){        
             if  (rounded=="round") {
@@ -46,7 +58,7 @@ module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_bl
             translate([0,0,h_propeller]) scale([1,1,0.6]) sphere(d_thruster/20);
         }
         
-        translate([0,0,-1]) cylinder(h=h_propeller,d=d_motor);
+        translate([0,0,-1]) cylinder(h=h_propeller,d=d_motor_shaft);
     }
 }
 
