@@ -4,7 +4,7 @@ use <thruster.scad>;
 use <motor_housing.scad>;
 use <chassis.scad>;
 
-$fn = 100;
+//$fn = 100;
 
 module thruster_Complete() {
                          color("blue")    translate([0,0,0])        thruster(w_walls, d_motor_t, h_motor_sup, o_motor, d_thruster,h_thruster, d_screw_p, h_support, w_support);
