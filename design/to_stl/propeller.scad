@@ -21,6 +21,7 @@ Notes:
     )
 */
 
+include<../config.scad>;
 use <../propeller.scad>;
 $fn = 100;
-propeller();
+propeller(w_walls, d_thruster, h_propeller, o_propeller, n_blade, s_blade, w_blade, rounded, d_motor_shaft);

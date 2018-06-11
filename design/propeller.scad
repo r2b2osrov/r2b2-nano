@@ -20,6 +20,7 @@ Notes:
         d_motor_shaft=1     //motor shaft diameter
     )
 */
+include <config.scad>;
 
 module blades(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4){
     for (i=[0:n_blade]){
@@ -63,5 +64,4 @@ module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_bl
 }
 
 //$fn=100;
-propeller();
-
+propeller(w_walls, d_thruster, h_propeller, o_propeller, n_blade, s_blade, w_blade, rounded, d_motor_shaft);

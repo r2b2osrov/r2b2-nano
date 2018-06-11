@@ -9,19 +9,22 @@ Notes:
     Default values for module motor_housing
 
     module motor_housing(
-        w_walls=1.5,        //with of the walls
-        d_motor=7.2,        //motor diameter
-        h_motor_body=26,    //motor housing height
+        w_walls_m=1,        //with of the walls
+        d_motor=7.6,        //motor diameter
+        h_motor_body=22.6,    //motor housing height
         d_motor_shaft=1     //motor shaft diameter
     )
 */
 
-module motor_housing(w_walls=1.5, d_motor=7.2, h_motor_body=26, d_motor_shaft=1){
+include <config.scad>;
+
+module motor_housing(w_walls_m=1, d_motor=7.6, h_motor_body=22.6, d_motor_shaft=1){
     difference() {
-                            cylinder(d=d_motor+w_walls*2, h=h_motor_body); 
-        translate([0,0,-1]) cylinder(d=d_motor, h=h_motor_body-w_walls+1);
-        translate([0,0,1])  cylinder(d=d_motor_shaft, h=h_motor_body);
+                                    cylinder(d=d_motor+w_walls_m*2, h=h_motor_body); 
+        translate([0,0,w_walls_m])  cylinder(d=d_motor, h=h_motor_body);
+        translate([0,0,-2])         cylinder(d=d_motor_shaft, h=h_motor_body);
     }     
 }
 
-motor_housing();
+//$fn = 100;
+motor_housing(w_walls_m, d_motor, h_motor_body, d_motor_shaft);

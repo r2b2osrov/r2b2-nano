@@ -9,13 +9,14 @@ Notes:
     Default values for module motor_housing
 
     module motor_housing(
-        w_walls=1.5,        //with of the walls
-        d_motor=7.2,        //motor diameter
-        h_motor_body=26,    //motor housing height
+        w_walls=1,        //with of the walls
+        d_motor=7.6,        //motor diameter
+        h_motor_body=22.6,    //motor housing height
         d_motor_shaft=1     //motor shaft diameter
     )
 */
 
+include<../config.scad>;
 use <../motor_housing.scad>;
 $fn = 100;
-motor_housing(d_motor_shaft=0);
+motor_housing(w_walls_m, d_motor, h_motor_body, d_motor_shaft);
