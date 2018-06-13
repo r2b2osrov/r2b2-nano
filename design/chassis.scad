@@ -68,9 +68,9 @@ module chassis(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=56,
     }
 }
 
-/*translate([0,0,10])
+/*%translate([0,0,h_battery+w_walls/2])
 difference(){
-    cube ([w_chassis-4,d_chassis-4,w_walls], center=true);
+    cube ([w_chassis-4,d_chassis-w_support*2,w_walls], center=true);
     difference(){
         union(){
             translate([w_chassis/2-w_support,15-h_support,0])          cube([w_support,h_support,12.3]);
@@ -78,11 +78,10 @@ difference(){
         }
         translate([w_chassis/2-1-w_support,15-h_support,12.3]) cube([w_support+2,h_support,12.3]);
     }
-
     difference(){
         union(){
-            translate([-w_chassis/2,15-h_support,0])             cube([w_support,h_support,12.3]);
-            translate([-w_chassis/2+2,15-h_support-w_walls,0])   cube([w_support-2,h_support+w_walls*2,12.3+w_walls*2]);
+            translate([-w_chassis/2,15-h_support,0])            cube([w_support,h_support,12.3]);
+            translate([-w_chassis/2+2,15-h_support-w_walls,0])  cube([w_support-2,h_support+w_walls*2,12.3+w_walls*2]);
         }
         translate([-w_chassis/2+1,15-h_support,12.3]) cube([w_support+2,h_support,12.3]);
     }

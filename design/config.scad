@@ -1,11 +1,12 @@
 //General Config
+$fn = 100;
 w_walls=2.7;                //width of the walls
 d_screw_h=3;                //screw thread hole
 d_screw_p=d_screw_h+0.4;    //screw pass trhougth
 h_support=8;                //screw support height
 w_support=8;                //screw support width
-w_chassis=56;               //chassis with
-d_chassis=75;               //chassis depth
+w_chassis=60;               //chassis with
+d_chassis=80;               //chassis depth
 h_battery=9.5;              //hight battery
 
 //motor
