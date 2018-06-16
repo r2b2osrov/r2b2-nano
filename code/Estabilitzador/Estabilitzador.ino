@@ -1,39 +1,45 @@
 #define BLYNK_PRINT Serial
-
 #define BLYNK_USE_DIRECT_CONNECT
 
 #include <BlynkSimpleEsp32_BLE.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
-#include<Wire.h>
+#include <Wire.h>
 
-// You should get Auth Token in the Blynk App.
-// Go to the Project Settings (nut icon).
+//Uncomment to disable "Brownout detector was triggered"
+//#include "soc/soc.h"
+//#include "soc/rtc_cntl_reg.h"
+
 char auth[] = "5629041522ee44dca545ccafec01f47e";
 WidgetTerminal terminal(V3);
 
-const int MPU_addr=0x68; // I2C address of the MPU-6050
+//I2C address of the MPU-6050 Gyro/Acc
+const int MPU_addr=0x68; 
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 
 int freq = 2000;
-int ledChannelE_F = 0;
-int ledChannelD_F = 1;
-int ledChannelP_F = 2;
-int ledChannelF_F = 3;
-int ledChannelE_B = 4;
-int ledChannelD_B = 5;
-int ledChannelP_B = 6;
-int ledChannelF_B = 7;
 int resolution = 8;
+int MotorChannelR = 0;
+int MotorChannelL = 1;
+int MotorChannelF = 2;
+int MotorChannelB = 3;
 
-const int motorD_F = 27;
-const int motorD_B = 19;
-const int motorE_F = 26;
-const int motorE_B = 17;
-const int motorP_F = 5;
-const int motorF_B = 18;
-const int motorF_F = 25;
-const int motorP_B = 16;
+//Pins del motor Dret
+const int motorR_IN1 = 25;
+const int motorR_IN2 = 33;
+const int motorR_PWM = 32;
+//Pins del motor Esquerra
+const int motorL_IN1 = 5;
+const int motorL_IN2 = 18;
+const int motorL_PWM = 19; 
+//Pins del motor Frontal
+const int motorF_IN1 = 26;
+const int motorF_IN2 = 27;
+const int motorF_PWM = 14;
+//Pins del motor Posterior
+const int motorB_IN1 = 12;
+const int motorB_IN2 = 13;
+const int motorB_PWM = 15;
 
 int joystick_X = 512;
 int joystick_Y = 512;
@@ -47,8 +53,6 @@ BLYNK_WRITE(V1) {
   int y = param[1].asInt();
   joystick_X = x;
   joystick_Y = y;
-
-  // Do something with x and y
 
   if (estabilitzador){
     if (y>712) {
@@ -231,6 +235,8 @@ BLYNK_WRITE(V0) {
 }
 
 void setup(){
+  //Uncomment to disable "Brownout detector was triggered"
+  //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
   Wire.begin();
   Wire.beginTransmission(MPU_addr);
   Wire.write(0x6B); // PWR_MGMT_1 register
