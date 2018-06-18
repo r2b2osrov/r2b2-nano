@@ -1,3 +1,16 @@
+//Title:         99_R2B2_Nano_Firmware.ino
+//Description:   Arduino IDE program to control R2B2_Nano 
+//Authors:       Pau Roura (@proura)
+//Date:          20180610
+//Version:       0.1
+//Notes:         
+//
+//
+//   ¡¡¡¡¡IN DEVELOPMENT!!!!
+// ¡¡¡¡¡NOT YET FUNCTIONAL!!!!!
+//
+//
+
 #define BLYNK_PRINT Serial
 #define BLYNK_USE_DIRECT_CONNECT
 
@@ -149,7 +162,7 @@ BLYNK_WRITE(V3) {
     terminal.print("GyZ = "); terminal.println(GyZ);
   }
   else {
-    terminal.println("Comanda no reconeguda!!!");  
+    terminal.println("Command not reconized!!!");  
   }
   terminal.flush();
 }

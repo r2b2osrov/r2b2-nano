@@ -1,3 +1,12 @@
+//Title:         98_R2B2_Nano_Pinout_Test.ino
+//Description:   Arduino IDE program to test R2B2 pinout 
+//Authors:       Pau Roura (@proura)
+//Date:          20180610
+//Version:       0.1
+//Notes:         
+//
+
+
 //Configuració del PWM pels 4 motors
 int freq = 2000;
 int resolution = 8;
@@ -88,8 +97,3 @@ void loop(){
   
   Serial.println(millis());
 }
-
-
-
-
-

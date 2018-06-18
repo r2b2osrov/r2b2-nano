@@ -1,3 +1,11 @@
+//Title:         01_wire_scanner.ino
+//Description:   Arduino IDE program to look for 1 Wire device address
+//Authors:       Pau Roura (@proura)
+//Date:          20180610
+//Version:       0.1
+//Notes:         
+//
+
 #include <Wire.h>
 
 void setup() {
@@ -30,4 +38,3 @@ void setup() {
 }
 
 void loop() {}
-

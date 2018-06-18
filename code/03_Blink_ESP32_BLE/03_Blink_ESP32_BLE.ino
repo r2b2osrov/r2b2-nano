@@ -1,3 +1,11 @@
+//Title:         03_Blink_ESP32_BLE.ino
+//Description:   Arduino IDE program to connect to Blink Mobile App and send Gyro/Acce info 
+//Authors:       Pau Roura (@proura)
+//Date:          20180610
+//Version:       0.1
+//Notes:         
+//
+
 /*************************************************************
   Download latest Blynk library here:
     https://github.com/blynkkk/blynk-library/releases/latest
@@ -101,4 +109,3 @@ void loop()
   // delay
   delay(1000);
 }
-

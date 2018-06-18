@@ -1,3 +1,11 @@
+//Title:         02_MPU-6050.ino
+//Description:   Arduino IDE program to work with Accelerometer and Gyrospcope
+//Authors:       Pau Roura (@proura)
+//Date:          20180610
+//Version:       0.1
+//Notes:         
+//
+
 #include<Wire.h>
 
 const int MPU_addr=0x68; // I2C address of the MPU-6050
@@ -35,4 +43,3 @@ void loop(){
   Serial.print(" | GyZ = "); Serial.println(GyZ);
   delay(1000);
 }
-
