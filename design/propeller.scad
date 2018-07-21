@@ -30,7 +30,7 @@ module blades(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade
     }
 }
 
-module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4, rounded=false, d_motor_shaft=1){
+module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4, rounded=false, d_motor_shaft=1, d_motor_grub=2){
     difference(){ 
         union(){        
             if  (rounded=="round") {
@@ -60,8 +60,9 @@ module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_bl
         }
         
         translate([0,0,-1]) cylinder(h=h_propeller,d=d_motor_shaft);
+        translate([0,0,2+d_motor_grub/2]) rotate([360/n_blade*0.6/2,90,0]) cylinder(h=h_propeller,d=d_motor_grub);
     }
 }
 
 //$fn=100;
-propeller(w_walls, d_thruster, h_propeller, o_propeller, n_blade, s_blade, w_blade, rounded, d_motor_shaft);
+propeller(w_walls, d_thruster, h_propeller, o_propeller, n_blade, s_blade, w_blade, rounded, d_motor_shaft, d_motor_grub);

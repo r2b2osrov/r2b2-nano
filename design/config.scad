@@ -8,10 +8,12 @@ w_support=8;                //screw support width
 w_chassis=60;               //chassis with
 d_chassis=80;               //chassis depth
 h_battery=9.5;              //hight battery
+h_control=10;               //hight electronics
 
 //motor
 d_motor=7.6;        //motor diameter
 d_motor_shaft=1;    //motor shaft diameter
+d_motor_grub=2;     //motor grub
 h_motor=16.60;      //motor height
 
 //motor_housing
