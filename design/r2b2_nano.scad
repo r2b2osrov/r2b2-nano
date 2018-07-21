@@ -1,3 +1,12 @@
+/*
+Title:          r2b2_nano.scad
+Description:    R2B2 Nano
+Authors:        Pau Roura (@proura)
+Date:           20180721
+Version:        0.2
+Notes:
+*/
+
 include <config.scad>;
 use <propeller.scad>;
 use <thruster.scad>;

@@ -2,8 +2,8 @@
 Title:          propeller.scad
 Description:    encapsulation for the motors
 Authors:        Pau Roura (@proura)
-Date:           20180610
-Version:        0.1
+Date:           20180721
+Version:        0.2
 Notes:
 
     Default values for module propeller
@@ -18,8 +18,10 @@ Notes:
         w_blade=4,          //with of the blades
         rounded=false,      //shape of the blades [round | trian | empty]
         d_motor_shaft=1     //motor shaft diameter
+        d_motor_grub=2      //motor grub screw diameter
     )
 */
+
 include <config.scad>;
 
 module blades(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4){

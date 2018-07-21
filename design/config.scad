@@ -1,3 +1,12 @@
+/*
+Title:          config.scad for R2B2 Nano
+Description:    All configuration parameters for R2B2-Nano
+Authors:        Pau Roura (@proura)
+Date:           20180721
+Version:        0.2
+Notes:
+*/
+
 //General Config
 $fn = 100;
 w_walls=2.7;                //width of the walls
@@ -13,7 +22,7 @@ h_control=10;               //hight electronics
 //motor
 d_motor=7.6;        //motor diameter
 d_motor_shaft=1;    //motor shaft diameter
-d_motor_grub=2;     //motor grub
+d_motor_grub=2;     //motor grub screw diameter
 h_motor=16.60;      //motor height
 
 //motor_housing
