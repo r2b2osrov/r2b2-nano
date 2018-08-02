@@ -2,8 +2,8 @@
 Title:          propeller.scad for generate STL file
 Description:    encapsulation for the motors
 Authors:        Pau Roura (@proura)
-Date:           20180721
-Version:        0.2
+Date:           20180723
+Version:        0.3
 Notes:
 
     Default values for module propeller
@@ -17,7 +17,7 @@ Notes:
         s_blade=20,         //angle separation between blades
         w_blade=4,          //with of the blades
         rounded=false,      //shape of the blades [round | trian | empty]
-        d_motor_shaft=1     //motor shaft diameter
+        d_motor_shaft=1.3   //motor shaft diameter
         d_motor_grub=2      //motor grub screw diameter
     )
 */

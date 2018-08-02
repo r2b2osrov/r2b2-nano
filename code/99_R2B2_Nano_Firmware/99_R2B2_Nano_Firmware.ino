@@ -1,307 +1,107 @@
-
-//Title:         99_R2B2_Nano_Firmware.ino
-//Description:   Arduino IDE program to control R2B2_Nano 
+                                                                                                                    //Title:         98_R2B2_Nano_Pinout_Test.ino
+//Description:   Arduino IDE program for R2B2 
 //Authors:       Pau Roura (@proura)
-//Date:          20180610
+//Date:          20180730
 //Version:       0.1
 //Notes:         
 //
-//
-//   ¡¡¡¡¡IN DEVELOPMENT!!!!
-// ¡¡¡¡¡NOT YET FUNCTIONAL!!!!!
-//
-//
 
-//#define BLYNK_PRINT Serial
-//#define BLYNK_USE_DIRECT_CONNECT
-
-//#include <BlynkSimpleEsp32_BLE.h>
-//#include <BLEDevice.h>
-//#include <BLEServer.h>
-#include <Wire.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <PubSubClient.h>
+#include <MPU6050_tockn.h>
+#include <Wire.h>
 
-//Configuration
-//Wifi ssid and password
+const int R2B2id = ESP.getEfuseMac();
 const char* ssid = "BuLan";
 const char* password = "00009999";
-//clock_int = delay in de loop
-const int clock_int = 100;
-//speed_s = from 0 to 255 PWM of Stabilization
-const int speed_s = 100;
-//offset_s is the º of AcY = from 0 to 90 that no activate Stabilization
-const int AngY_Offset_s = 13;
+const char* mqttServer = "192.168.82.106";
+const int   mqttPort = 1883;
 
-//Uncomment to disable "Brownout detector was triggered"
-//#include "soc/soc.h"
-//#include "soc/rtc_cntl_reg.h"
+WiFiClient espClient;
+PubSubClient client(espClient);
 
-//char auth[] = "5629041522ee44dca545ccafec01f47e";
-//WidgetTerminal terminal(V3);
+MPU6050 mpu6050(Wire);
 
-//I2C address of the MPU-6050 Gyro/Acc
-const int MPU_addr=0x68; 
-int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+//Configuració del PWM pels 4 motors
+const int freq = 2000;
+const int resolution = 8;
+const int MotorChannelR = 0;
+const int MotorChannelL = 1;
+const int MotorChannelF = 2;
+const int MotorChannelB = 3;
 
-int16_t AG_Data[100][7]; 
-
-int freq = 2000;
-int resolution = 8;
-int MotorChannelR = 0;
-int MotorChannelL = 1;
-int MotorChannelF = 2;
-int MotorChannelB = 3;
+bool connected = false;
+long timer = 0;
+long timer2 = 0;
+long C_Alive = 0;
+long old_C_Alive = 0;
+char topic[50];
+char msg[250];
+char host[50];
 
 //Pins del motor Dret
-const int motorR_IN1 = 25;
-const int motorR_IN2 = 33;
-const int motorR_PWM = 32;
+const int motorR_IN1 = 26;
+const int motorR_IN2 = 27;
+const int motorR_PWM = 14;
 //Pins del motor Esquerra
 const int motorL_IN1 = 5;
 const int motorL_IN2 = 18;
 const int motorL_PWM = 19; 
 //Pins del motor Frontal
-const int motorF_IN1 = 26;
-const int motorF_IN2 = 27;
-const int motorF_PWM = 14;
+const int motorF_IN1 = 25;
+const int motorF_IN2 = 33;
+const int motorF_PWM = 32;
 //Pins del motor Posterior
 const int motorB_IN1 = 12;
 const int motorB_IN2 = 13;
 const int motorB_PWM = 15;
 
-int joystick_X = 512;
-int joystick_Y = 512;
-
-bool estabilitzador = false;
-bool manual = false;
-bool debug = true;
-
-//Activate/Desactivate Stabilizer
-//BLYNK_WRITE(V0) {
-//  estabilitzador = param.asInt();
-//  if (estabilitzador) {
-//    Blynk.setProperty(V2, "setlabel", "UP");
-//    Blynk.setProperty(V4, "setlabel", "DOWN");
-//  }
-//  else {
-//    Blynk.setProperty(V2, "setLabel", "ACCELERATE");
-//    Blynk.setProperty(V4, "setLabel", "BRAKE");
-//  }
-//}
-//
-//BLYNK_WRITE(V1) {
-//  int x = param[0].asInt();
-//  int y = param[1].asInt();
-//  joystick_X = x;
-//  joystick_Y = y;
-//
-//  if (estabilitzador){
-//    if (y>712) {
-//      manual = true;
-//      if (x>712){
-//
-//
-//      } else if (x<312) {
-//
-//
-//      } else {      
-//
-//      }
-//    } else if (y<312) {
-//      manual = true;
-//      if (x>712){
-//
-//      } else if (x<312){
-//
-//      } else {
-//
-//      }
-//      
-//    } else {
-//       if (x>712){
-//
-//      } else if (x<312) {
-//
-//      } else {
-//        manual = false;
-//
-//      }
-//    }
-//  }
-//  else {
-//    if (y>712) {
-//      manual = true;
-//
-//    } else if (y<312) {
-//      manual = true;
-//
-//    } else {
-//      manual = false;
-//
-//    }  
-//  }
-//}
-//
-//BLYNK_WRITE(V2) {
-//  if (estabilitzador) {
-//    //UP
-//    if (param.asInt()) {
-//      manual = true;
-//
-//    } else {
-//      manual = false;
-//
-//    }    
-//  } else {
-//    //GAAAAS!
-//    if (param.asInt()) {
-//      manual = true;
-//
-//    } else {
-//      manual = false;
-//
-//    }
-//  }
-//}
-//
-//BLYNK_WRITE(V3) {
-//  if (String("debug") == param.asStr()){
-//    debug = !debug;
-//    if (debug) terminal.println("Debug text enabled!");
-//    else terminal.println("Debug text disabled.");
-//  } 
-//  else if (String("gyro") == param.asStr()) {
-//    terminal.println("Gyroscope data:");
-//    terminal.println("===============");
-//    terminal.print("GyX = "); terminal.println(GyX);
-//    terminal.print("GyY = "); terminal.println(GyY);
-//    terminal.print("GyZ = "); terminal.println(GyZ);
-//  }
-//  else {
-//    terminal.println("Command not reconized!!!");  
-//  }
-//  terminal.flush();
-//}
-//
-//BLYNK_WRITE(V4) {
-//  if (estabilitzador) {
-//    //DOWN!
-//    if (param.asInt()) {
-//      manual = true;
-//
-//    } else {
-//      manual = false;
-//
-//    }    
-//  } else {
-//    //BRAKE!!
-//    if (param.asInt()) {
-//      manual = true;
-//
-//    } else {
-//      manual = false;
-//
-//    }
-//  }
-//}
-
-void read_AGD(){
-  AcX=Wire.read()<<8|Wire.read(); // 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)
-  AcY=Wire.read()<<8|Wire.read(); // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
-  AcZ=Wire.read()<<8|Wire.read(); // 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
-  Tmp=Wire.read()<<8|Wire.read(); // 0x41 (TEMP_OUT_H) & 0x42 (TEMP_OUT_L
-  GyX=Wire.read()<<8|Wire.read(); // 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
-  GyY=Wire.read()<<8|Wire.read(); // 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
-  GyZ=Wire.read()<<8|Wire.read(); // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
-}
-
-void push_AGD(int16_t AcXr, int16_t AcYr, int16_t AcZr, int16_t Tmpr, int16_t GyXr, int16_t GyYr, int16_t GyZr){
-  int16_t AcXl,AcYl,AcZl,Tmpl,GyXl,GyYl,GyZl;
-  for (int i=0;i<100;i++) {
-    AcXl = AG_Data[i][0]; AG_Data[i][0] = AcXr; AcXr = AcXl;
-    AcYl = AG_Data[i][1]; AG_Data[i][1] = AcYr; AcYr = AcYl;
-    AcZl = AG_Data[i][2]; AG_Data[i][2] = AcZr; AcZr = AcZl;
-    Tmpl = AG_Data[i][3]; AG_Data[i][3] = Tmpr; Tmpr = Tmpl;
-    GyXl = AG_Data[i][4]; AG_Data[i][4] = GyXr; GyXr = GyXl;
-    GyYl = AG_Data[i][5]; AG_Data[i][5] = GyYr; GyYr = GyYl;
-    GyZl = AG_Data[i][6]; AG_Data[i][6] = GyZr; GyZr = GyZl;      
-  }
-}
-
 void setup(){
-  //Uncomment to disable "Brownout detector was triggered"
-  //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
   Serial.begin(115200);
-
   Serial.println("Booting");
-  Serial.println("Waiting for wifi connection...");
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.println("Connection Failed! Rebooting...");
-    delay(5000);
-    ESP.restart();
+
+  initializeMotors();
+  initializeWifi();
+  initializeOTA((char*)R2B2id);
+  initializeMQTT();
+  initializeMPU();
+
+}
+
+void loop(){
+  ArduinoOTA.handle();
+  if (!client.connected()) {
+    motorStop();
+    reconnect();
+  }else{
+    if((millis() - timer2 > 1000)){
+      if (C_Alive == old_C_Alive) motorStop();
+      old_C_Alive = C_Alive; 
+      timer2 = millis();     
+    }      
   }
+  client.loop();
+}
 
-   ArduinoOTA.setPassword("r2b2");
-  
-  ArduinoOTA
-    .onStart([]() {
-      String type;
-      if (ArduinoOTA.getCommand() == U_FLASH)
-      type = "sketch";
-      else // U_SPIFFS
-      type = "filesystem";
-    
-      Serial.println("Start updating " + type);
-    })
-    .onEnd([]() {
-      Serial.println("\nEnd");
-    })
-    .onProgress([](unsigned int progress, unsigned int total) {
-      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-    })
-    .onError([](ota_error_t error) {
-      Serial.printf("Error[%u]: ", error);
-      if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-      else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-      else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-      else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-      else if (error == OTA_END_ERROR) Serial.println("End Failed");
-    });
-  
-  ArduinoOTA.begin();
-
-  Serial.println("Ready");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
- // Blynk.begin(auth);
-
-  Wire.begin();
-  Wire.beginTransmission(MPU_addr);
-  Wire.write(0x6B); // PWR_MGMT_1 register
-  Wire.write(0); // set to zero (wakes up the MPU-6050)
-  Wire.endTransmission(true);
-
+void initializeMotors(){
   ledcSetup(MotorChannelR, freq, resolution);
   ledcSetup(MotorChannelL, freq, resolution);
   ledcSetup(MotorChannelF, freq, resolution);
   ledcSetup(MotorChannelB, freq, resolution);
-
+  
   ledcAttachPin(motorR_PWM, MotorChannelR);
   ledcAttachPin(motorL_PWM, MotorChannelL);
   ledcAttachPin(motorF_PWM, MotorChannelF);
   ledcAttachPin(motorB_PWM, MotorChannelB);
-
+  
   ledcWrite(MotorChannelR, 0);
   ledcWrite(MotorChannelL, 0);
   ledcWrite(MotorChannelF, 0); 
   ledcWrite(MotorChannelB, 0);
-
+  
   pinMode (motorR_IN1, OUTPUT);
   pinMode (motorR_IN2, OUTPUT);
   pinMode (motorL_IN1, OUTPUT);
@@ -319,105 +119,240 @@ void setup(){
   digitalWrite (motorF_IN2, LOW);
   digitalWrite (motorB_IN1, LOW);
   digitalWrite (motorB_IN2, LOW);
-
-  for (int i=0; i<100; i++){
-    push_AGD(0,0,0,0,0,0,0);
-  }
 }
 
-void loop(){
-  //Blynk.run();
+void initializeWifi(){
+  WiFi.mode(WIFI_STA);
+  WiFi.onEvent(WiFiEvent);
+  WiFi.begin(ssid, password);
+  Serial.println("Connecting WiFi...");
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Connection Failed! Rebooting...");
+    delay(5000);
+    ESP.restart();
+  }  
+}
+
+void WiFiEvent(WiFiEvent_t event){
+    switch(event) {
+      case SYSTEM_EVENT_STA_GOT_IP:
+          Serial.print("WiFi connected! IP address: ");
+          Serial.println(WiFi.localIP());  
+          connected = true;
+          break;
+      case SYSTEM_EVENT_STA_DISCONNECTED:
+          Serial.println("WiFi lost connection");
+          connected = false;
+          break;
+    }
+}
+
+void initializeOTA(const char * host_name){
+  sprintf(host, "r2b2-%u", host_name);
+  ArduinoOTA.setHostname(host);
+  ArduinoOTA
+    .onStart([]() {
+      String type;
+      if (ArduinoOTA.getCommand() == U_FLASH) type = "sketch";
+      else type = "filesystem";
+      Serial.println("Start updating " + type);
+    })
+    .onEnd([]() {
+      Serial.println("\nEnd");
+    })
+    .onProgress([](unsigned int progress, unsigned int total) {
+      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+
+      //Send Upload Info to MQTT
+      if((millis() - timer > 250) || ((progress / (total / 100)) == 100 )){
+        sprintf(msg, "upload %u%%\r", (progress / (total / 100)));
+        sprintf(topic, "r2b2/%u/info", R2B2id);
+        client.publish(topic, msg);
+        timer = millis();
+      }
+      
+    })
+    .onError([](ota_error_t error) {
+      Serial.printf("Error[%u]: ", error);
+      if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+      else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+      else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+      else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+      else if (error == OTA_END_ERROR) Serial.println("End Failed");
+    });
   
-  Wire.beginTransmission(MPU_addr);
-  Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H)
-  Wire.endTransmission(false);
-  Wire.requestFrom(MPU_addr,14,true); // request a total of 14 registers
+  ArduinoOTA.begin();
+}
 
-  read_AGD();
-  push_AGD(AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ); 
+void initializeMQTT(){
+  client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
+}
 
-  if (estabilitzador & !manual) {
-    int PotY = (AcY*255)/16384;
-    int AngY = (AcY*90)/16384;
-    if (debug) { messageln("Acy = " + String(AcY) + " | AngY = " + String(AngY) + " | M_BACK = " + String(PotY)); }
-   
-    if (AngY < -AngY_Offset_s) {
-      run_motor_F(-PotY);
-      run_motor_B(PotY);
-      if (debug) { messageln(" M_FRONT = " + String(-PotY) + " | M_BACK = " + String(PotY) + " | Acy = " + String(AcY) + " | AngY = " + String(AngY)); }
-    }
-    else if (AngY > AngY_Offset_s) {
-      run_motor_F(PotY);
-      run_motor_B(-PotY);
-      if (debug) { messageln(" M_FRONT = " + String(PotY) + " | M_BACK = " + String(-PotY) + " | Acy = " + String(AcY) + " | AngY = " + String(AngY)); }
-    }
-    else {
-      run_motor_F(0);
-      run_motor_B(0);
+void reconnect() {
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection... ");
+    
+    if (client.connect(host)) {
+      Serial.println("Connected!");
+      sprintf(topic, "r2b2/%u/info", R2B2id);
+      client.publish(topic, "Hello from R2B2-nano!");
+      client.publish(topic, host);
+      sprintf(topic, "r2b2/%u/tasks", R2B2id);
+      client.subscribe(topic);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 3 seconds");
+      delay(3000);
     }
   }
-  else if (!estabilitzador & !manual) {
-    run_motor_F(0);
-    run_motor_B(0);
+}
+ 
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i=0;i<length;i++) {
+    Serial.print((char)payload[i]);
   }
+  Serial.println();
 
-//  message("AcX = "); message(String(AcX));
-//  message(" | AcY = "); message(String(AcY));
-//  message(" | AcZ = "); message(String(AcZ));
-//  message(" | Tmp = "); message(String(Tmp/340.00+36.53));
-//  message(" | GyX = "); message(String(GyX));
-//  message(" | GyY = "); message(String(GyY));
-//  message(" | GyZ = "); messageln(String(GyZ));
-  delay(clock_int);
+  String str = String((char *)payload);
+  str = str.substring(0, length);
+
+  if ( str == "ping" ) pong();
+  if ( str == "calibrate" ) calibrate();
+  if ( str == "getGyrAcc" ) getGyrAcc();
+  if ( str == "getTemp" ) getTemp();
+  if ( str == "stop" ) motorStop();
+  if ( str.substring(0, 3) == "mRF" ) motorRForward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mRB" ) motorRBackward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mRS" ) motorRStop();
+
+  if ( str.substring(0, 3) == "mLF" ) motorLForward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mLB" ) motorLBackward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mLS" ) motorLStop();
+
+  if ( str.substring(0, 3) == "mFF" ) motorFForward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mFB" ) motorFBackward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mFS" ) motorFStop();
+
+  if ( str.substring(0, 3) == "mBF" ) motorBForward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mBB" ) motorBBackward(str.substring(4, length).toInt());
+  if ( str.substring(0, 3) == "mBS" ) motorBStop();
 }
 
-void message(String str) {
-//  terminal.print(str);
-  Serial.print(str);
+void initializeMPU(){
+  pinMode (21, INPUT_PULLUP);
+  pinMode (23, INPUT_PULLUP);
+  Wire.begin();
+  mpu6050.begin();
 }
 
-void messageln(String str) {
-//  terminal.println(str);
-  Serial.println(str);
+void calibrate() {
+  Wire.begin();
+  mpu6050.begin();
+  mpu6050.calcGyroOffsets(true);
+  sprintf(topic, "r2b2/%u/info", R2B2id);
+  client.publish(topic, "Calibrated!");
 }
 
-void run_motor_F(int val){
-  if (val>0) {
-    //if (debug) { messageln("Motor_F (+) : "+String(val));}
-    digitalWrite(motorF_IN1,HIGH);
-    digitalWrite(motorF_IN2,LOW);
-    ledcWrite(MotorChannelF, val);
-  } 
-  else if (val<0){
-    //if (debug) { messageln("Motor_F (-) : "+String(val));}
-    digitalWrite(motorF_IN1,LOW);
-    digitalWrite(motorF_IN2,HIGH);
-    ledcWrite(MotorChannelF, -val);
-  }
-  else {
-    //if (debug) { messageln("Motor_F (0) : "+String(val));}
-    digitalWrite(motorF_IN1,LOW);
-    digitalWrite(motorF_IN2,LOW);
-    ledcWrite(MotorChannelF, 0);
-  }
+void pong() {
+  sprintf(topic, "r2b2/%u/alive", R2B2id);
+  client.publish(topic, "pong");
+  C_Alive++;
 }
 
-void run_motor_B(int val){
-  if (val>0) {
-    digitalWrite(motorB_IN1,HIGH);
-    digitalWrite(motorB_IN2,LOW);
-    ledcWrite(MotorChannelB, val);
-  } 
-  else if (val<0){
-    digitalWrite(motorB_IN1,LOW);
-    digitalWrite(motorB_IN2,HIGH);
-    ledcWrite(MotorChannelB, -val);
-  }
-  else {
-    digitalWrite(motorB_IN1,LOW);
-    digitalWrite(motorB_IN2,LOW);
-    ledcWrite(MotorChannelB, 0);
-  }
+void getGyrAcc() {
+  mpu6050.update();   
+  sprintf(topic, "r2b2/%u/mpu", R2B2id);
+  sprintf(msg, "%ld %ld %ld %ld %ld %ld", mpu6050.getRawAccX(), mpu6050.getRawAccY(), mpu6050.getRawAccZ(), mpu6050.getRawGyroX(), mpu6050.getRawGyroY(), mpu6050.getRawGyroZ());
+  client.publish(topic, msg); 
 }
 
+void getTemp() {
+  mpu6050.update();   
+  sprintf(topic, "r2b2/%u/tmp", R2B2id);
+  sprintf(msg, "%f", mpu6050.getTemp());
+  client.publish(topic, msg); 
+}
 
+void motorRForward(int motorPWM){
+  ledcWrite(MotorChannelR, motorPWM);
+  digitalWrite (motorR_IN1, HIGH);
+  digitalWrite (motorR_IN2, LOW);
+}
+
+void motorRBackward(int motorPWM){
+  ledcWrite(MotorChannelR, motorPWM);
+  digitalWrite (motorR_IN1, LOW);
+  digitalWrite (motorR_IN2, HIGH);
+}
+
+void motorRStop(){
+  ledcWrite(MotorChannelR, 0);
+  digitalWrite (motorR_IN1, LOW);
+  digitalWrite (motorR_IN2, LOW);
+}
+
+void motorLForward(int motorPWM){
+  ledcWrite(MotorChannelL, motorPWM);
+  digitalWrite (motorL_IN1, HIGH);
+  digitalWrite (motorL_IN2, LOW);
+}
+
+void motorLBackward(int motorPWM){
+  ledcWrite(MotorChannelL, motorPWM);
+  digitalWrite (motorL_IN1, LOW);
+  digitalWrite (motorL_IN2, HIGH);
+}
+
+void motorLStop(){
+  ledcWrite(MotorChannelL, 0);
+  digitalWrite (motorL_IN1, LOW);
+  digitalWrite (motorL_IN2, LOW);
+}
+
+void motorFForward(int motorPWM){
+  ledcWrite(MotorChannelF, motorPWM);
+  digitalWrite (motorF_IN1, HIGH);
+  digitalWrite (motorF_IN2, LOW);
+}
+
+void motorFBackward(int motorPWM){
+  ledcWrite(MotorChannelF, motorPWM);
+  digitalWrite (motorF_IN1, LOW);
+  digitalWrite (motorF_IN2, HIGH);
+}
+
+void motorFStop(){
+  ledcWrite(MotorChannelF, 0);
+  digitalWrite (motorF_IN1, LOW);
+  digitalWrite (motorF_IN2, LOW);
+}
+
+void motorBForward(int motorPWM){
+  ledcWrite(MotorChannelB, motorPWM);
+  digitalWrite (motorB_IN1, HIGH);
+  digitalWrite (motorB_IN2, LOW);
+}
+
+void motorBBackward(int motorPWM){
+  ledcWrite(MotorChannelB, motorPWM);
+  digitalWrite (motorB_IN1, LOW);
+  digitalWrite (motorB_IN2, HIGH);
+}
+
+void motorBStop(){
+  ledcWrite(MotorChannelB, 0);
+  digitalWrite (motorB_IN1, LOW);
+  digitalWrite (motorB_IN2, LOW);
+}
+
+void motorStop(){
+  motorRStop();
+  motorLStop();
+  motorFStop();
+  motorBStop();
+}

@@ -60,7 +60,7 @@ module chassis(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=56,
 
             //battery and power compartments
             translate([-w_chassis/2,-d_chassis/2+w_support,0])          cube ([w_chassis,w_walls,h_battery]);
-            translate([-w_chassis/2,15-h_support-w_walls*2,0])          cube ([w_chassis,w_walls,h_battery]);
+            //translate([-w_chassis/2,15-h_support-w_walls*2,0])          cube ([w_chassis,w_walls,h_battery]);
             translate([-w_chassis/2,d_chassis/2-w_support-w_walls,0])   cube ([w_chassis,w_walls,h_battery]);
             translate([-w_chassis/2,-d_chassis/2+w_support,0])          cube ([w_walls,d_chassis/2+7-h_support,h_battery]);
             translate([w_chassis/2-w_walls,-d_chassis/2+w_support,0])   cube ([w_walls,d_chassis/2+7-h_support,h_battery]);
@@ -75,8 +75,8 @@ module chassis(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=56,
         translate([-w_walls*3,-d_chassis/2+w_support/2,h_support/2])    rotate([0,90,0])    cylinder(w_walls*6,d=d_screw_h);
 
         //Cable holes
-        translate([-w_chassis/2+w_support,15-h_support-w_walls*2-1,0])  cube ([w_walls,w_walls+2,h_battery+1]);
-        translate([w_chassis/2-w_support-w_walls*2,13,-w_walls-1])      cube ([w_walls,w_walls+2,w_walls+2]);
+        //translate([-w_chassis/2+w_support,15-h_support-w_walls*2-1,0])  cube ([w_walls,w_walls+2,h_battery+1]);
+        //translate([w_chassis/2-w_support-w_walls*2,13,-w_walls-1])      cube ([w_walls,w_walls+2,w_walls+2]);
     }
 }
 
@@ -90,10 +90,13 @@ module chassis_b(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=5
                 cube ([w_chassis-w_walls*2,d_chassis-w_support*2,w_walls], center=true);
                 translate([0,0,-h_battery]) supportR(w_walls, w_support, h_support, w_chassis, h_battery);
                 translate([0,0,-h_battery]) supportL(w_walls, w_support, h_support, w_chassis, h_battery);
-                translate([-8,10,0]) cube ([8,8,w_walls+2], center=true);
-            }
+                translate([0,-d_chassis/2+w_support+w_walls+2,0]) cube ([8,4,w_walls+2], center=true);
+                
+            };
 
             //Electronic compartment
+            translate([-w_chassis/2+w_support,-d_chassis/2+w_support+w_walls+6,h_battery+w_walls]) cube ([w_chassis-w_support*2,w_walls,h_control]);
+            translate([-w_chassis/2+w_support,d_chassis/2-w_support-w_walls-8,h_battery+w_walls]) cube ([w_chassis-w_support*2,w_walls,h_control]);
             translate([-w_chassis/2+w_support,d_chassis/2-w_support-w_walls,h_battery+w_walls]) cube ([w_chassis-w_support*2,w_walls,h_control]);
             translate([-w_chassis/2+w_support,-d_chassis/2+w_support,h_battery+w_walls])        cube ([w_chassis-w_support*2,w_walls,h_control]);
             translate([-w_chassis/2+w_support,-d_chassis/2+w_support,h_battery+w_walls])        cube ([w_walls,d_chassis-w_support*2,h_control]);
@@ -104,6 +107,7 @@ module chassis_b(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=5
             translate([-w_chassis/2,15-h_support,h_battery+w_walls*3])          cube ([w_support,h_support,w_walls]);
         }
         
+        //Screw holes
         translate([w_chassis/2-w_support/2,15-h_support/2,h_battery])   cylinder(h_control+h_battery,d=d_screw_h);
         translate([-w_chassis/2+w_support/2,15-h_support/2,h_battery])  cylinder(h_control+h_battery,d=d_screw_h);
     }

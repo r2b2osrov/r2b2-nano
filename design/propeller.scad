@@ -2,8 +2,8 @@
 Title:          propeller.scad
 Description:    encapsulation for the motors
 Authors:        Pau Roura (@proura)
-Date:           20180721
-Version:        0.2
+Date:           20180723
+Version:        0.3
 Notes:
 
     Default values for module propeller
@@ -17,7 +17,7 @@ Notes:
         s_blade=20,         //angle separation between blades
         w_blade=4,          //with of the blades
         rounded=false,      //shape of the blades [round | trian | empty]
-        d_motor_shaft=1     //motor shaft diameter
+        d_motor_shaft=1.3   //motor shaft diameter
         d_motor_grub=2      //motor grub screw diameter
     )
 */
@@ -32,7 +32,7 @@ module blades(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade
     }
 }
 
-module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4, rounded=false, d_motor_shaft=1, d_motor_grub=2){
+module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_blade=3, s_blade=20, w_blade=4, rounded=false, d_motor_shaft=1.3, d_motor_grub=2){
     difference(){ 
         union(){        
             if  (rounded=="round") {
@@ -62,7 +62,7 @@ module propeller(w_walls=2.7, d_thruster=34, h_propeller=10, o_propeller=1, n_bl
         }
         
         translate([0,0,-1]) cylinder(h=h_propeller,d=d_motor_shaft);
-        translate([0,0,2+d_motor_grub/2]) rotate([360/n_blade*0.6/2,90,0]) cylinder(h=h_propeller,d=d_motor_grub);
+        translate([0,0,1+d_motor_grub/2]) rotate([360/n_blade*0.8/2,90,0]) cylinder(h=h_propeller,d=d_motor_grub);
     }
 }
 

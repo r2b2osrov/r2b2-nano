@@ -18,4 +18,4 @@ translate([0,-d_chassis/2-d_thruster/2,-15])  rotate([0,0,90])    thruster_Compl
 translate([0,d_chassis/2+d_thruster/2,-15])   rotate([0,0,-90])   thruster_Complete();
 
 translate([0,0,-15])    chassis(d_screw_h, w_walls, w_support, h_support, w_chassis, d_chassis, h_battery);
-color("gray") translate([0,0,-15])    chassis_b(d_screw_p, w_walls, w_support, h_support, w_chassis, d_chassis, h_battery, h_control);
+translate([0,0,-15])    chassis_b(d_screw_p, w_walls, w_support, h_support, w_chassis, d_chassis, h_battery, h_control);
