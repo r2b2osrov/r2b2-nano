@@ -21,20 +21,20 @@ module base(d_screw_h=3){
             translate([30,30,2])cylinder(10,28,28);
             translate([71,30,2])cylinder(10,28,28);
         }
-        translate([26.5,-1,4]) cube([8,6,2.5]);
-        translate([66.5,-1,4]) cube([8,6,2.5]);
+        translate([26.5,-1,4]) cube([8,6,3.5]);
+        translate([66.5,-1,4]) cube([8,6,3.5]);
         translate([85,20,0]) linear_extrude(height = 2, center = true, convexity = 10, twist = 0) rotate([0,180,0]) text("R2B2", size=20);
 
     }
 
      difference(){
         union(){
-            translate([50.5,10,0])cylinder(6,d_screw_h/2+2,d_screw_h/2+2);
-            translate([50.5,50,0])cylinder(6,d_screw_h/2+2,d_screw_h/2+2);
+            translate([50.5,10,0] )cylinder(6,d_screw_h/2+2,d_screw_h/2+2);
+            translate([50.5,50,0]) cylinder(6,d_screw_h/2+2,d_screw_h/2+2);
         }   
 
-        translate([50.5,10,1])cylinder(8,d_screw_h/2,d_screw_h/2);
-        translate([50.5,50,1])cylinder(8,d_screw_h/2,d_screw_h/2);
+        translate([50.5,10,1]) cylinder(8,d_screw_h/2,d_screw_h/2);
+        translate([50.5,50,1]) cylinder(8,d_screw_h/2,d_screw_h/2);
     }
 }
 

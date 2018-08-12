@@ -11,7 +11,7 @@ Notes:
 $fn = 100;
 w_walls=2.7;                //width of the walls
 d_screw_h=3;                //screw thread hole
-d_screw_head=5.5;
+d_screw_head=6.5;
 d_screw_p=d_screw_h+0.4;    //screw pass trhougth
 h_support=8;                //screw support height
 w_support=8;                //screw support width
@@ -22,8 +22,7 @@ h_control=12;               //hight electronics
 
 //motor
 d_motor=7.6;        //motor diameter
-d_motor_shaft=1.3;    //motor shaft diameter
-d_motor_grub=4;     //motor grub screw diameter
+d_motor_shaft=1.5;  //motor shaft diameter
 h_motor=16.60;      //motor height
 
 //motor_housing
@@ -44,4 +43,5 @@ o_propeller=1;      //offset of the blades to shaft
 n_blade=3;          //number of blades
 s_blade=20;         //angle separation between blades
 w_blade=4;          //with of the blades
-rounded="empty";      //shape of the blades [round | trian | empty]
+rounded="empty";    //shape of the blades [round | trian | empty]
+d_motor_grub=2;   //motor grub screw diameter
