@@ -192,6 +192,7 @@ void draw() {
           else overPING = false;
           
           if( touches[i].x > 500 && touches[i].x < 600 && touches[i].y > height-50 && touches[i].y < height)  {
+            if (!overRST) testMotor();
             overRST = true;
           }
           else overRST = false;
@@ -496,6 +497,24 @@ void getGyrAcc(){
 
 void getTemp(){
   client.publish("r2b2/" + r2b2Id + "/tasks", "getTemp");
+}
+
+void testMotor(){
+  for (int j=0;j<100;j=j+2){
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mBB " + j);
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mFB " + j);
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mRB " + j);
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mLB " + j);
+    delay(100);
+  }
+  for (int j=100;j>0;j=j-2){
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mBB " + j);
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mFB " + j);
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mRB " + j);
+    client.publish("r2b2/" + r2b2Id + "/tasks", "mLB " + j);
+    delay(100);
+  }
+  client.publish("r2b2/" + r2b2Id + "/tasks", "stop");  
 }
 
 void messageReceived(String topic, byte[] payload) {

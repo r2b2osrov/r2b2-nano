@@ -43,17 +43,18 @@ char msg[250];
 char host[50];
 
 //Pins del motor Dret
-const int motorR_IN1 = 26;
-const int motorR_IN2 = 27;
-const int motorR_PWM = 14;
+const int motorR_IN1 = 33;
+const int motorR_IN2 = 25;
+const int motorR_PWM = 32;
 //Pins del motor Esquerra
 const int motorL_IN1 = 5;
 const int motorL_IN2 = 18;
 const int motorL_PWM = 19; 
+
 //Pins del motor Frontal
-const int motorF_IN1 = 25;
-const int motorF_IN2 = 33;
-const int motorF_PWM = 32;
+const int motorF_IN1 = 26;
+const int motorF_IN2 = 27;
+const int motorF_PWM = 14;
 //Pins del motor Posterior
 const int motorB_IN1 = 12;
 const int motorB_IN2 = 13;
@@ -78,7 +79,7 @@ void loop(){
     reconnect();
   }else{
     if((millis() - timer2 > 1000)){
-      if (C_Alive == old_C_Alive) motorStop();
+      //if (C_Alive == old_C_Alive) motorStop();
       old_C_Alive = C_Alive; 
       timer2 = millis();     
     }      
