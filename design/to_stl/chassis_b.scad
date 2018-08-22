@@ -2,21 +2,21 @@
 Title:          chassis.scad for generate STL file
 Description:    R2B2 nano Chassis
 Authors:        Pau Roura (@proura)
-Date:           20180621
-Version:        0.1
+Date:           20180822
+Version:        0.2
 Notes:
 
-    Default values for module chassis
+    Default values for chassis_b module
 
-    module chassis(
+    module chassis_b(
         d_screw_h=3,        //screw hole diameter
-        w_walls=2.7,        //wall with
-        w_support=8,        //support with
+        w_walls=2.7,        //wall width
+        w_support=8,        //support width
         h_support=8,        //support depth
-        w_chassis=56,       //chassis with
-        d_chassis=71,       //chassis depth
-        h_battery=9.5,
-        h_control=10
+        w_chassis=70,       //chassis width
+        d_chassis=100,      //chassis depth
+        h_battery=12,       //chassis power height
+        h_control=12        //chassis control height
     )
 */
 

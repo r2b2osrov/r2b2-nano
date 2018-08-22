@@ -5,6 +5,14 @@ Authors:        Pau Roura (@proura)
 Date:           20180801
 Version:        0.1
 Notes:
+
+Default values for module base and base_b
+
+    module base or base_b(
+        d_screw_h=3,            //screw hole diameter
+        d_screw_p=d_screw_h+0.4 //screw pass trhougth diameter
+        d_screw_head=6.5        //screw head diameter
+    )
 */
 
 include <config.scad>;
@@ -38,7 +46,7 @@ module base(d_screw_h=3){
     }
 }
 
-module baseb(d_screw_p=d_screw_h+0.4,d_screw_head=5.5){
+module base_b(d_screw_p=d_screw_h+0.4,d_screw_head=6.5){
     difference(){
         union(){
             translate([30,2,2])cube([41,56,2]);
@@ -55,5 +63,5 @@ module baseb(d_screw_p=d_screw_h+0.4,d_screw_head=5.5){
 }
 
 
-color("yellow") translate([0,0,0])base(d_screw_h);
-color("blue") translate([0,0,16])baseb(d_screw_p,d_screw_head);
+color("yellow") translate([0,0,0])  base(d_screw_h);
+color("blue")   translate([0,0,16]) base_b(d_screw_p,d_screw_head);

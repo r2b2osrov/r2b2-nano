@@ -2,25 +2,26 @@
 Title:          chassis.scad
 Description:    R2B2 nano Chassis
 Authors:        Pau Roura (@proura)
-Date:           20180621
-Version:        0.3
+Date:           20180822
+Version:        0.4
 Notes:
 
-    Default values for module chassis
+    Default values for module chassis and chassis_b
 
-    module chassis(
+    module chassis or chassis_b(
         d_screw_h=3,        //screw hole diameter
-        w_walls=2.7,        //wall with
-        w_support=8,        //support with
+        w_walls=2.7,        //wall width
+        w_support=8,        //support width
         h_support=8,        //support depth
-        w_chassis=56,       //chassis with
-        d_chassis=71,       //chassis depth
-        h_battery=9.5
+        w_chassis=70,       //chassis width
+        d_chassis=100,      //chassis depth
+        h_battery=12,       //chassis power height
+        h_control=12        //chassis control height
     )
 */
 include <config.scad>;
 
-module supportR(w_walls=2.7, w_support=8, h_support=8, w_chassis=56, h_battery=9.5){
+module supportR(w_walls=2.7, w_support=8, h_support=8, w_chassis=70, h_battery=9.5){
     union(){
         translate([w_chassis/2-w_support,15-h_support-1,0])        cube([w_support,h_support+2,h_battery+w_walls]);
         translate([w_chassis/2-w_support,15-h_support-w_walls,0])  cube([w_support-2,w_walls,h_battery+w_walls*3]);
@@ -28,7 +29,7 @@ module supportR(w_walls=2.7, w_support=8, h_support=8, w_chassis=56, h_battery=9
     }
 }
 
-module supportL(w_walls=2.7, w_support=8, h_support=8, w_chassis=56, h_battery=9.5){
+module supportL(w_walls=2.7, w_support=8, h_support=8, w_chassis=70, h_battery=9.5){
     union(){
         translate([-w_chassis/2,15-h_support-1,0])          cube([w_support,h_support+2,h_battery+w_walls]);
         translate([-w_chassis/2+2,15-h_support-w_walls,0])  cube([w_support-2,w_walls,h_battery+w_walls*3]);
@@ -36,18 +37,18 @@ module supportL(w_walls=2.7, w_support=8, h_support=8, w_chassis=56, h_battery=9
     }
 }
 
-module supportB(w_walls=2.7, w_support=8, h_support=8, d_chassis=71){
+module supportB(w_walls=2.7, w_support=8, h_support=8, d_chassis=100){
     translate([w_walls,d_chassis/2-w_support,0])     cube([w_walls,w_support,h_support]);
     translate([-w_walls*2,d_chassis/2-w_support,0])  cube([w_walls,w_support,h_support]);
 }
 
-module supportF(w_walls=2.7, w_support=8, h_support=8, d_chassis=71){
+module supportF(w_walls=2.7, w_support=8, h_support=8, d_chassis=100){
     translate([w_walls,-d_chassis/2,0])              cube([w_walls,w_support,h_support]);
     translate([-w_walls*2,-d_chassis/2,0])           cube([w_walls,w_support,h_support]);
 
 }
 
-module chassis(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=56, d_chassis=71, h_battery=9.5){
+module chassis(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=70, d_chassis=100, h_battery=12){
     difference() {
         union(){
             translate([0,0,-w_walls/2]) cube([w_chassis,d_chassis,w_walls], center=true);
@@ -80,7 +81,7 @@ module chassis(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=56,
     }
 }
 
-module chassis_b(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=56, d_chassis=71, h_battery=9.5, h_control=10){
+module chassis_b(d_screw_h=3, w_walls=2.7, w_support=8, h_support=8, w_chassis=70, d_chassis=100, h_battery=12, h_control=12){
     difference() {
         union() {
             

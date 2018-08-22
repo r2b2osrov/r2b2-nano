@@ -9,9 +9,9 @@ Notes:
     Default values for module motor_housing
 
     module motor_housing(
-        w_walls=1,        //with of the walls
+        w_walls=1,          //width of the walls
         d_motor=7.6,        //motor diameter
-        h_motor_body=22.6,    //motor housing height
+        h_motor_body=22.6,  //motor housing height
         d_motor_shaft=1     //motor shaft diameter
     )
 */

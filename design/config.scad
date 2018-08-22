@@ -10,15 +10,15 @@ Notes:
 //General Config
 $fn = 100;
 w_walls=2.7;                //width of the walls
-d_screw_h=3;                //screw thread hole
-d_screw_head=6.5;
-d_screw_p=d_screw_h+0.4;    //screw pass trhougth
+d_screw_h=3;                //screw thread hole diameter
+d_screw_head=6.5;           //screw head diameter
+d_screw_p=d_screw_h+0.4;    //screw pass trhougth diameter
 h_support=8;                //screw support height
 w_support=8;                //screw support width
-w_chassis=70;               //chassis with
-d_chassis=100;               //chassis depth
-h_battery=12;              //hight battery
-h_control=12;               //hight electronics
+w_chassis=70;               //chassis width
+d_chassis=100;              //chassis depth
+h_battery=12;               //battery height
+h_control=12;               //electronics height
 
 //motor
 d_motor=7.6;        //motor diameter
@@ -26,7 +26,7 @@ d_motor_shaft=1.5;  //motor shaft diameter
 h_motor=16.60;      //motor height
 
 //motor_housing
-w_walls_m=1;                           //with of the walls
+w_walls_m=1;                           //width of the walls
 gap_housing=3;                         //extra height of the encapsulation
 h_motor_body=h_motor+(gap_housing*2);  //motor housing height
 
@@ -42,6 +42,6 @@ h_propeller=10;     //propeller height
 o_propeller=1;      //offset of the blades to shaft
 n_blade=3;          //number of blades
 s_blade=20;         //angle separation between blades
-w_blade=4;          //with of the blades
+w_blade=4;          //width of the blades
 rounded="empty";    //shape of the blades [round | trian | empty]
-d_motor_grub=2;   //motor grub screw diameter
+d_motor_grub=2;     //motor grub screw diameter
