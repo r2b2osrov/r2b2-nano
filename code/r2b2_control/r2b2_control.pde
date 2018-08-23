@@ -8,9 +8,6 @@ ToxiclibsSupport gfx;
 String r2b2Id = "3291342516";
 //String r2b2Id = "581217840";
 
-boolean pc = false;
-boolean mobile = true;
-
 String MQTTServer = "192.168.82.106";
 
 boolean forward = false;
@@ -32,9 +29,6 @@ int interval = 0;
 char[] teapotPacket = new char[14];
 float[] q = new float[4];
 Quaternion quat = new Quaternion(1, 0, 0, 0);
-//float[] gravity = new float[3];
-//float[] euler = new float[3];
-//float[] ypr = new float[3];
 ////////////////////////////////////////////////
 
 PFont f;
@@ -49,8 +43,6 @@ boolean overPWRUP = false;
 boolean overPWRDW = false;
 
 void setup() {
-  //size(900, 800, P3D);
-  //frame.setResizable(true);
   size(displayWidth, displayHeight, P3D);
   orientation(LANDSCAPE);
   
@@ -62,14 +54,11 @@ void setup() {
   
   client = new MQTTClient(this);
   client.connect("mqtt://" + MQTTServer, "Pro-" + r2b2Id);
-  client.subscribe("r2b2/" + r2b2Id + "/#");
-  // client.unsubscribe("/example");
-  
+  client.subscribe("r2b2/" + r2b2Id + "/#");  
   f = createFont("Arial",16,true);  
 }
 
 void draw() {
-  
   if (millis() - interval > 300) {
         client.publish("r2b2/" + r2b2Id + "/tasks", "getGyrAcc");
         ping();
@@ -222,32 +211,6 @@ void draw() {
           
       }
   }
-      
-  //UNCOMENT FOR PC USE
-  //if( mouseX > 0 && mouseX < 100 && mouseY > height-50 && mouseY < height) overSTOP = true;
-  //else overSTOP = false;
-  //if( mouseX > 100 && mouseX < 200 && mouseY > height-50 && mouseY < height) overCLBT = true;
-  //else overCLBT = false;
-  //if( mouseX > 200 && mouseX <300 && mouseY > height-50 && mouseY < height) overTEMP = true;
-  //else overTEMP = false;
-  //if( mouseX > 300 && mouseX < 400 && mouseY > height-50 && mouseY < height) overGyrAcc = true;
-  //else overGyrAcc = false;
-  //if( mouseX > 400 && mouseX < 500 && mouseY > height-50 && mouseY < height) overPING = true;
-  //else overPING = false;
-  //if( mouseX > 500 && mouseX < 600 && mouseY > height-50 && mouseY < height)  overRST = true;
-  //else overRST = false;
-  //if( mouseX > 10 && mouseX < 60 && mouseY > 50 && mouseY < 90) overPWRUP = true;
-  //else overPWRUP = false;
-  //if( mouseX > 10 && mouseX < 60 && mouseY > 90 && mouseY < 140) overPWRDW = true;
-  //else overPWRDW = false;
-  //if( mouseX > 10 && mouseX < 110 && mouseY > 200 && mouseY < 300) overUP = true;
-  //else overUP = false;
-  //if( mouseX > 10 && mouseX < 110 && mouseY > 310 && mouseY < 410) overDW = true;
-  //else overDW = false;
-  //if( mouseX > 120 && mouseX < 220 && mouseY > 200 && mouseY < 300) overXRP = true;
-  //else overXRP = false;
-  //if( mouseX > 120 && mouseX < 220 && mouseY > 310 && mouseY < 410) overXRN = true;
-  //else overXRN = false;
   
   background(0);
   
