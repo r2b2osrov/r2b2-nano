@@ -9,15 +9,16 @@ Notes:
     Default values for module half_thruster_A, half_thruster_B or thruster
 
     module half_thruster_A | half_thruster_B | thruster(
-        w_walls=2.7,    //width of the walls
-        d_motor_t=9.6,  //motor diameter
-        h_motor_sup=8,  //motor support height
-        o_motor=0,      //motor support distance from ground
-        d_thruster=34,  //thruster diameter
-        h_thruster=30,  //thruster height
-        d_screw_p=3.4,  //screw diameter
-        h_support=8,    //screw support height
-        w_support=8     //screw support width
+        w_walls=2.7,                        //width of the walls
+        w_walls_m=1,                        //width of the motor encapsulation walls
+        d_motor_t=d_motor+(w_walls_m*2),    //motor diameter
+        h_motor_sup=8,                      //motor support height
+        o_motor=0,                          //motor support distance from ground
+        d_thruster=34,                      //thruster diameter
+        h_thruster=30,                      //thruster height
+        d_screw_p=3.4,                      //screw diameter
+        h_support=8,                        //screw support height
+        w_support=8                         //screw support width
     )
 */
 include <config.scad>;

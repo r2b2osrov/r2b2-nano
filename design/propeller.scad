@@ -17,7 +17,7 @@ Notes:
         s_blade=20,         //angle separation between blades
         w_blade=4,          //width of the blades
         rounded=false,      //shape of the blades [round | trian | empty]
-        d_motor_shaft=1.5   //motor shaft diameter
+        d_motor_shaft=1.5,  //motor shaft diameter
         d_motor_grub=2      //motor grub screw diameter
     )
 */

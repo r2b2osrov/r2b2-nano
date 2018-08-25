@@ -6,7 +6,6 @@ MQTTClient client;
 ToxiclibsSupport gfx;
 
 String r2b2Id = "3291342516";
-//String r2b2Id = "581217840";
 
 String MQTTServer = "192.168.82.106";
 
