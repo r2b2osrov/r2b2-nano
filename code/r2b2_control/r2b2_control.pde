@@ -45,15 +45,19 @@ void setup() {
   size(displayWidth, displayHeight, P3D);
   orientation(LANDSCAPE);
   
+  //Initilize console strings
   for (int i=0; i<10; i++){
     console[i] = "";
   }
     
   gfx = new ToxiclibsSupport(this);
   
+  //Configure MQTT
   client = new MQTTClient(this);
   client.connect("mqtt://" + MQTTServer, "Pro-" + r2b2Id);
-  client.subscribe("r2b2/" + r2b2Id + "/#");  
+  client.subscribe("r2b2/" + r2b2Id + "/#");
+  
+  //Setup font
   f = createFont("Arial",16,true);  
 }
 
@@ -64,6 +68,8 @@ void draw() {
         interval = millis();
   } 
   
+  
+  //Look for active motors//////////////////////////////////////////////////
   if (forward & !backward) {
     inMoveH = true;
     if (left) {
@@ -125,8 +131,9 @@ void draw() {
     client.publish("r2b2/" + r2b2Id + "/tasks", "mFS");
     inMoveV = false;
   }
+  ////////////////////////////////////////////////////////////////////////////////
   
-  /////////////GRAPHIC///////////////////
+  //Look for Touches//////////////////////////////////////////////////////////////
   
   up = false;
   down = false;
@@ -211,6 +218,9 @@ void draw() {
       }
   }
   
+  ////////////////////////////////////////////////////////////////////////////////
+  
+  ////Draw Buttons////////////////////////////////////////////////////////////////
   background(0);
   
   textFont(f,16);                  
@@ -313,6 +323,10 @@ void draw() {
   text("FR",width - 95,250);
   text("BR",width - 95,350);
   
+  ////////////////////////////////////////////////////////////////////////////////
+  
+  //Draw R2B2-nano////////////////////////////////////////////////////////////////
+  
   stroke(0);
   pushMatrix();
   translate(width / 2, height / 3 + 50);
@@ -380,58 +394,9 @@ void draw() {
   vertex(30,12,45); vertex(30,24,45); vertex(30,24,-45); vertex(30,12,-45);
   endShape();
  
-  
   popMatrix();
-  ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 }
-
-void keyPressed() { 
-  if (keyCode == 37) right = true;
-  else if (keyCode == 38) forward = true;
-  else if (keyCode == 39) left = true;
-  else if (keyCode == 40) backward = true;
-  else if (key == 'w') up = true;
-  else if (key == 's') down = true;
-  else if (key == 'e') rotXP = true;
-  else if (key == 'd') rotXN = true;
-  else if (key == 'r') stopMotors();
-  else if (key == 'c') calibrate();
-  else if (key == 'p') ping();
-  else if (key == 'g') getGyrAcc();
-  else if (key == 't') getTemp();
-  else if (key == 'q') powerUP();
-  else if (key == 'a') powerDOWN();
-  else if (keyCode == 49) client.publish("r2b2/" + r2b2Id + "/tasks", "mRF " + power);
-  else if (keyCode == 50) client.publish("r2b2/" + r2b2Id + "/tasks", "mLF " + power);
-  else if (keyCode == 51) client.publish("r2b2/" + r2b2Id + "/tasks", "mFF " + power);
-  else if (keyCode == 52) client.publish("r2b2/" + r2b2Id + "/tasks", "mBF " + power);
-  else if (keyCode == 55) client.publish("r2b2/" + r2b2Id + "/tasks", "mRB " + power);
-  else if (keyCode == 56) client.publish("r2b2/" + r2b2Id + "/tasks", "mLB " + power);
-  else if (keyCode == 57) client.publish("r2b2/" + r2b2Id + "/tasks", "mFB " + power);
-  else if (keyCode == 48) client.publish("r2b2/" + r2b2Id + "/tasks", "mBB " + power);
-  
-}
-
-void keyReleased(){
-  if (keyCode == 37) right = false;
-  else if (keyCode == 38) forward = false;
-  else if (keyCode == 39) left = false;
-  else if (keyCode == 40) backward = false;
-  else if (key == 'w') up = false;
-  else if (key == 's') down = false;
-  else if (key == 'e') rotXP = false;
-  else if (key == 'd') rotXN = false;
-}
-
-//void mousePressed() {
-//  if (overPWRUP) powerUP();
-//  if (overPWRDW) powerDOWN();
-//  if (overSTOP) stopMotors();
-//  if (overCLBT) calibrate();
-//  if (overPING) ping();
-//  if (overGyrAcc) getGyrAcc();
-//  if (overTEMP) getTemp();  
-//}
 
 void powerUP(){
   power = power + 10;
